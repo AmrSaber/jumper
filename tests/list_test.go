@@ -35,8 +35,8 @@ func TestListCommand(t *testing.T) {
 		RunJumperSuccess(t, "mark", "mango")
 
 		out := RunJumperSuccess(t, "list")
-		if !(strings.Index(out, "apple") < strings.Index(out, "mango") &&
-			strings.Index(out, "mango") < strings.Index(out, "zebra")) {
+		if strings.Index(out, "apple") >= strings.Index(out, "mango") ||
+			strings.Index(out, "mango") >= strings.Index(out, "zebra") {
 			t.Errorf("expected sorted order apple < mango < zebra, got:\n%s", out)
 		}
 	})
