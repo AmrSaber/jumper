@@ -55,16 +55,18 @@ source ~/.zshrc   # or ~/.bashrc
 ## Quick Start
 
 ```bash
-# Bookmark the current directory
+# Bookmark the current directory using its base name
 cd ~/Projects/my-app
+jumper mark           # saves as "my-app"
+
+# Bookmark the current directory with an explicit name
 jumper mark my-app
 
-# Jump to it from anywhere
-jump my-app
+# Bookmark a specific directory without cd-ing into it
+jumper mark my-app ~/Projects/my-app
 
-# Bookmark using the directory's base name (no name needed)
-cd ~/Projects/my-app
-jumper mark      # saves as "my-app"
+# Jump to a bookmark from anywhere
+jump my-app
 
 # Jump into a subdirectory directly
 jump my-app/src/components
@@ -78,8 +80,11 @@ jumper list
 # │ my-app               │ /home/amr/Projects/my-app    │
 # └──────────────────────┴──────────────────────────────┘
 
-# Delete a bookmark
-jumper delete my-app
+# Rename a bookmark
+jumper rename my-app app
+
+# Delete bookmarks
+jumper delete dotfiles my-app
 
 # Delete the bookmark matching the current directory's name
 cd ~/Projects/my-app
