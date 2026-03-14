@@ -17,6 +17,14 @@ Jumper lets you bookmark directories and jump to them by name from anywhere in y
 
 ## Installation
 
+**Homebrew (macOS and Linux):**
+
+```bash
+brew install AmrSaber/tap/jumper
+```
+
+**Go:**
+
 ```bash
 go install github.com/AmrSaber/jumper@latest
 ```
