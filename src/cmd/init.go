@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"jumper/src/services"
+
 	"github.com/spf13/cobra"
 )
 
@@ -42,11 +44,10 @@ var initCmd = &cobra.Command{
 			fmt.Print(bashInit)
 		default:
 			if shell == "" {
-				fmt.Fprintln(os.Stderr, "error: could not detect shell, please pass it explicitly: jumper init [bash|zsh]")
+				services.Fatal("error: could not detect shell, please pass it explicitly: jumper init [bash|zsh]")
 			} else {
-				fmt.Fprintf(os.Stderr, "error: unsupported shell %q, supported: bash, zsh\n", shell)
+				services.Fatal("error: unsupported shell %q, supported: bash, zsh", shell)
 			}
-			os.Exit(1)
 		}
 	},
 }

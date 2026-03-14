@@ -51,8 +51,7 @@ var listCmd = &cobra.Command{
 			t.SetStyle(table.StyleLight)
 			t.Render()
 		default:
-			fmt.Fprintf(os.Stderr, "error: unsupported format %q\n", listFlags.output)
-			os.Exit(1)
+			services.Fatal("error: unsupported format %q", listFlags.output)
 		}
 	},
 }

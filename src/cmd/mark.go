@@ -29,8 +29,7 @@ If the name already exists, its path is overwritten.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		dir, err := os.Getwd()
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "error: cannot get current directory:", err)
-			os.Exit(1)
+			services.Fatal("error: cannot get current directory: %v", err)
 		}
 
 		var name string

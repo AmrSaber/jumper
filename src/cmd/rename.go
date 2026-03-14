@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"jumper/src/services"
 
@@ -23,8 +22,7 @@ var renameCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		oldName, newName := args[0], args[1]
 		if !services.Rename(oldName, newName) {
-			fmt.Fprintf(os.Stderr, "error: no bookmark named %q\n", oldName)
-			os.Exit(1)
+			services.Fatal("error: no bookmark named %q", oldName)
 		}
 
 		fmt.Printf("Renamed bookmark %q to %q\n", oldName, newName)

@@ -34,16 +34,14 @@ If no name is provided, the current directory's base name is used.`,
 		if len(args) == 0 {
 			dir, err := os.Getwd()
 			if err != nil {
-				fmt.Fprintln(os.Stderr, "error: cannot get current directory:", err)
-				os.Exit(1)
+				services.Fatal("error: cannot get current directory: %v", err)
 			}
 			args = []string{filepath.Base(dir)}
 		}
 
 		for _, name := range args {
 			if !services.Delete(name) {
-				fmt.Fprintf(os.Stderr, "error: no bookmark named %q\n", name)
-				os.Exit(1)
+				services.Fatal("error: no bookmark named %q", name)
 			}
 			fmt.Printf("Deleted bookmark %q\n", name)
 		}

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -27,8 +26,7 @@ var getCmd = &cobra.Command{
 
 		bookmark, ok := services.Get(title)
 		if !ok {
-			fmt.Fprintf(os.Stderr, "error: no bookmark named %q\n", title)
-			os.Exit(1)
+			services.Fatal("error: no bookmark named %q", title)
 		}
 
 		fmt.Println(filepath.Join(bookmark.Path, subDir))
