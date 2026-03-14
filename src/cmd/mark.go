@@ -11,17 +11,21 @@ import (
 )
 
 var markCmd = &cobra.Command{
-	Use:   "mark [name]",
-	Short: "Bookmark the current directory",
-	Long: `Bookmark the current directory under the given name.
+	Use:   "mark [name] [directory]",
+	Short: "Bookmark a directory",
+	Long: `Bookmark a directory under the given name.
 If no name is provided, the directory's base name is used.
+If no directory is provided, the current directory is used.
 If the name already exists, its path is overwritten.`,
-	Example: `  # Bookmark current directory as "proj"
+	Example: `  # Bookmark current directory using its base name
+  jumper mark
+
+  # Bookmark current directory as "proj"
   jumper mark proj
 
-  # Bookmark using the directory's base name
-  jumper mark`,
-	Args: cobra.MaximumNArgs(1),
+  # Bookmark a specific directory as "proj"
+  jumper mark proj ~/Projects/my-app`,
+	Args: cobra.MaximumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		dir, err := os.Getwd()
 		if err != nil {
@@ -29,9 +33,15 @@ If the name already exists, its path is overwritten.`,
 			os.Exit(1)
 		}
 
-		name := filepath.Base(dir)
-		if len(args) == 1 {
+		var name string
+		switch len(args) {
+		case 0:
+			name = filepath.Base(dir)
+		case 1:
 			name = args[0]
+		case 2:
+			name = args[0]
+			dir = args[1]
 		}
 
 		services.Upsert(name, dir)

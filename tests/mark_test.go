@@ -37,4 +37,12 @@ func TestMarkCommand(t *testing.T) {
 			t.Errorf("expected updated path '/tmp', got: %s", path)
 		}
 	})
+
+	t.Run("mark with explicit name and directory", func(t *testing.T) {
+		RunJumperSuccess(t, "mark", "explicit-dir", "/tmp")
+		if path := RunJumperSuccess(t, "get", "explicit-dir"); path != "/tmp" {
+			t.Errorf("expected '/tmp', got: %s", path)
+		}
+	})
+
 }
