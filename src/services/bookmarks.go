@@ -38,6 +38,22 @@ func List() []Bookmark {
 	return loadBookmarks()
 }
 
+// Rename renames a bookmark from oldTitle to newTitle (case-insensitive match on oldTitle).
+// Returns false if oldTitle does not exist.
+func Rename(oldTitle, newTitle string) bool {
+	bookmarks := loadBookmarks()
+
+	for i, b := range bookmarks {
+		if strings.EqualFold(b.Title, oldTitle) {
+			bookmarks[i].Title = newTitle
+			saveBookmarks(bookmarks)
+			return true
+		}
+	}
+
+	return false
+}
+
 // Delete removes a bookmark by title (case-insensitive). Returns true if it existed.
 func Delete(title string) bool {
 	bookmarks := loadBookmarks()
