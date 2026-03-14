@@ -40,6 +40,21 @@ func TestDeleteCommand(t *testing.T) {
 		RunJumperFailure(t, "get", "tmp")
 	})
 
+	t.Run("delete multiple bookmarks", func(t *testing.T) {
+		RunJumperSuccess(t, "mark", "multi1")
+		RunJumperSuccess(t, "mark", "multi2")
+		RunJumperSuccess(t, "mark", "multi3")
+		RunJumperSuccess(t, "delete", "multi1", "multi2", "multi3")
+		RunJumperFailure(t, "get", "multi1")
+		RunJumperFailure(t, "get", "multi2")
+		RunJumperFailure(t, "get", "multi3")
+	})
+
+	t.Run("delete multiple fails if any non-existent", func(t *testing.T) {
+		RunJumperSuccess(t, "mark", "exists")
+		RunJumperFailure(t, "delete", "exists", "nonexistent")
+	})
+
 	t.Run("deleted bookmark no longer appears in list", func(t *testing.T) {
 		RunJumperSuccess(t, "mark", "gone")
 		RunJumperSuccess(t, "delete", "gone")
