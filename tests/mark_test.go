@@ -45,6 +45,13 @@ func TestMarkCommand(t *testing.T) {
 		}
 	})
 
+	t.Run("mark with non-existent directory warns", func(t *testing.T) {
+		out := RunJumperSuccess(t, "mark", "ghost", "/no/such/dir")
+		if !strings.Contains(out, "warning") {
+			t.Errorf("expected a warning, got: %s", out)
+		}
+	})
+
 	t.Run("mark with dot-prefixed name fails", func(t *testing.T) {
 		out := RunJumperFailure(t, "mark", ".hidden")
 		if !strings.Contains(out, ".") {

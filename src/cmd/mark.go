@@ -48,6 +48,10 @@ If the name already exists, its path is overwritten.`,
 			services.Fatal("error: bookmark name cannot start with '.'")
 		}
 
+		if _, err := os.Stat(dir); os.IsNotExist(err) {
+			services.Warn("warning: directory %q does not exist", dir)
+		}
+
 		services.Upsert(name, dir)
 
 		fmt.Printf("Bookmarked %q -> %s\n", name, dir)

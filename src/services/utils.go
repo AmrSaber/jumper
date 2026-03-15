@@ -15,6 +15,11 @@ func Fatal(format string, args ...any) {
 	os.Exit(1)
 }
 
+// Warn prints a yellow warning message to stderr.
+func Warn(format string, args ...any) {
+	_, _ = color.New(color.FgYellow).Fprintf(os.Stderr, format+"\n", args...)
+}
+
 // BookmarksPath returns the path to the bookmarks file.
 func BookmarksPath() string {
 	scope := gap.NewScope(gap.User, "jumper")
