@@ -133,9 +133,9 @@ The file is a plain JSON array — easy to inspect, back up, or sync with your d
 
 ## Contributing
 
-1. Fork the repository at [github.com/AmrSaber/jumper](https://github.com/AmrSaber/jumper)
-2. Create a feature branch (`git checkout -b feature/my-feature`)
+1. Fork the repository
+2. Create a feature branch (`git switch -c feature/my-feature`)
 3. Commit your changes
 4. Open a Pull Request
 
-Bug reports and feature requests: **https://github.com/AmrSaber/jumper/issues**
+For bug reports and feature requests, please [create a ticket](https://github.com/AmrSaber/jumper/issues).
