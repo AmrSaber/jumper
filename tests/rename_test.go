@@ -36,9 +36,11 @@ func TestRenameCommand(t *testing.T) {
 		RunJumperSuccess(t, "get", "renamed-case")
 	})
 
-	t.Run("rename to dot-prefixed name fails", func(t *testing.T) {
-		RunJumperSuccess(t, "mark", "dot-rename-test")
-		RunJumperFailure(t, "rename", "dot-rename-test", ".hidden")
+	t.Run("rename to path-like name fails", func(t *testing.T) {
+		RunJumperSuccess(t, "mark", "path-rename-test")
+		RunJumperFailure(t, "rename", "path-rename-test", ".hidden")
+		RunJumperFailure(t, "rename", "path-rename-test", "~/something")
+		RunJumperFailure(t, "rename", "path-rename-test", "/absolute")
 	})
 
 	t.Run("renamed bookmark appears in list with new name", func(t *testing.T) {

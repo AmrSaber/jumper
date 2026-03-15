@@ -52,11 +52,10 @@ func TestMarkCommand(t *testing.T) {
 		}
 	})
 
-	t.Run("mark with dot-prefixed name fails", func(t *testing.T) {
-		out := RunJumperFailure(t, "mark", ".hidden")
-		if !strings.Contains(out, ".") {
-			t.Errorf("expected error to mention dot prefix, got: %s", out)
-		}
+	t.Run("mark with path-like name fails", func(t *testing.T) {
+		RunJumperFailure(t, "mark", ".hidden")
+		RunJumperFailure(t, "mark", "~/something")
+		RunJumperFailure(t, "mark", "/absolute")
 	})
 
 }

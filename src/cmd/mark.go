@@ -44,8 +44,8 @@ If the name already exists, its path is overwritten.`,
 			dir = args[1]
 		}
 
-		if strings.HasPrefix(name, ".") {
-			services.Fatal("error: bookmark name cannot start with '.'")
+		if strings.HasPrefix(name, ".") || strings.HasPrefix(name, "~") || strings.HasPrefix(name, "/") {
+			services.Fatal("error: bookmark name cannot start with '.', '~', or '/'")
 		}
 
 		if _, err := os.Stat(dir); os.IsNotExist(err) {

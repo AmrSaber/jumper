@@ -23,8 +23,8 @@ var renameCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		oldName, newName := args[0], args[1]
 
-		if strings.HasPrefix(newName, ".") {
-			services.Fatal("error: bookmark name cannot start with '.'")
+		if strings.HasPrefix(newName, ".") || strings.HasPrefix(newName, "~") || strings.HasPrefix(newName, "/") {
+			services.Fatal("error: bookmark name cannot start with '.', '~', or '/'")
 		}
 
 		if !services.Rename(oldName, newName) {
