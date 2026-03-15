@@ -45,8 +45,19 @@ var listCmd = &cobra.Command{
 			t := table.NewWriter()
 			t.SetOutputMirror(os.Stdout)
 			t.AppendHeader(table.Row{"Title", "Path"})
-			for _, b := range bookmarks {
-				t.AppendRow(table.Row{color.New(color.FgBlue).Sprint(b.Title), b.Path})
+
+			homePath, err := os.UserHomeDir()
+			if err != nil {
+				services.Fatal("Could not get home directory path: %v", err)
+			}
+
+			for _, bookmark := range bookmarks {
+				bookmarkPath := bookmark.Path
+				if after, ok := strings.CutPrefix(bookmarkPath, homePath); ok {
+					bookmarkPath = "~" + after
+				}
+
+				t.AppendRow(table.Row{color.New(color.FgBlue).Sprint(bookmark.Title), bookmarkPath})
 			}
 			t.SetStyle(table.StyleLight)
 			t.Render()

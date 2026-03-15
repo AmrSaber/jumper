@@ -73,12 +73,12 @@ jump my-app/src/components
 
 # List all bookmarks
 jumper list
-# ┌──────────────────────┬──────────────────────────────┐
-# │ TITLE                │ PATH                         │
-# ├──────────────────────┼──────────────────────────────┤
-# │ dotfiles             │ /home/amr/.dotfiles          │
-# │ my-app               │ /home/amr/Projects/my-app    │
-# └──────────────────────┴──────────────────────────────┘
+# ┌──────────┬───────────────────┐
+# │ TITLE    │ PATH              │
+# ├──────────┼───────────────────┤
+# │ dotfiles │ ~/.dotfiles       │
+# │ my-app   │ ~/Projects/my-app │
+# └──────────┴───────────────────┘
 
 # Rename a bookmark
 jumper rename my-app app
