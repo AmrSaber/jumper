@@ -67,3 +67,24 @@ func Delete(title string) bool {
 
 	return false
 }
+
+// DeleteByPath removes all bookmarks pointing to the given path. Returns the deleted bookmarks.
+func DeleteByPath(path string) []Bookmark {
+	bookmarks := loadBookmarks()
+
+	remaining := bookmarks[:0]
+	var deleted []Bookmark
+	for _, bookmark := range bookmarks {
+		if bookmark.Path == path {
+			deleted = append(deleted, bookmark)
+		} else {
+			remaining = append(remaining, bookmark)
+		}
+	}
+
+	if len(deleted) > 0 {
+		saveBookmarks(remaining)
+	}
+
+	return deleted
+}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"jumper/src/services"
 
@@ -41,6 +42,10 @@ If the name already exists, its path is overwritten.`,
 		case 2:
 			name = args[0]
 			dir = args[1]
+		}
+
+		if strings.HasPrefix(name, ".") {
+			services.Fatal("error: bookmark name cannot start with '.'")
 		}
 
 		services.Upsert(name, dir)

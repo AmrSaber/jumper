@@ -83,12 +83,17 @@ jumper list
 # Rename a bookmark
 jumper rename my-app app
 
-# Delete bookmarks
+# Delete a bookmark by name
+jumper delete dotfiles
+
+# Delete multiple bookmarks by name
 jumper delete dotfiles my-app
 
-# Delete the bookmark matching the current directory's name
-cd ~/Projects/my-app
-jumper delete
+# Delete all bookmarks pointing to a specific directory
+jumper delete ~/Projects/my-app
+
+# Delete all bookmarks pointing to the current directory
+jumper delete           # or: jumper delete .
 
 # Use `jumper help` to get the full help
 ```
@@ -104,7 +109,7 @@ The `jump` function supports tab completion for bookmark names and subdirectorie
 ```
 jump pro<Tab>         → jump Projects/
 jump Projects/<Tab>   → jump Projects/src/
-                         jump Projects/docs/
+                        jump Projects/docs/
 jump Projects/sr<Tab> → jump Projects/src/
 ```
 
@@ -114,7 +119,6 @@ Bookmarks are stored as a JSON file at your system's standard data location:
 
 - **Linux**: `$XDG_DATA_HOME/jumper/bookmarks.json` (defaults to `~/.local/share/jumper/bookmarks.json`)
 - **macOS**: `~/Library/Application Support/jumper/bookmarks.json`
-- **Windows**: `%LOCALAPPDATA%\jumper\bookmarks.json`
 
 The file is a plain JSON array — easy to inspect, back up, or sync with your dotfiles.
 

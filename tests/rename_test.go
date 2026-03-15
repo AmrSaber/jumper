@@ -36,6 +36,11 @@ func TestRenameCommand(t *testing.T) {
 		RunJumperSuccess(t, "get", "renamed-case")
 	})
 
+	t.Run("rename to dot-prefixed name fails", func(t *testing.T) {
+		RunJumperSuccess(t, "mark", "dot-rename-test")
+		RunJumperFailure(t, "rename", "dot-rename-test", ".hidden")
+	})
+
 	t.Run("renamed bookmark appears in list with new name", func(t *testing.T) {
 		RunJumperSuccess(t, "mark", "before")
 		RunJumperSuccess(t, "rename", "before", "after")

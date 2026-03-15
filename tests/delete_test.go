@@ -34,10 +34,37 @@ func TestDeleteCommand(t *testing.T) {
 		RunJumperFailure(t, "get", "unmark-test")
 	})
 
-	t.Run("delete with no args uses current directory base name", func(t *testing.T) {
+	t.Run("delete with no args uses current directory path", func(t *testing.T) {
 		RunJumperSuccessIn(t, "/tmp", "mark", "tmp")
 		RunJumperSuccessIn(t, "/tmp", "delete")
 		RunJumperFailure(t, "get", "tmp")
+	})
+
+	t.Run("delete by explicit path", func(t *testing.T) {
+		RunJumperSuccessIn(t, "/tmp", "mark", "bypath")
+		RunJumperSuccess(t, "delete", "/tmp")
+		RunJumperFailure(t, "get", "bypath")
+	})
+
+	t.Run("delete by path removes all bookmarks for that path", func(t *testing.T) {
+		RunJumperSuccessIn(t, "/tmp", "mark", "pathdup1")
+		RunJumperSuccessIn(t, "/tmp", "mark", "pathdup2")
+		RunJumperSuccess(t, "delete", "/tmp")
+		RunJumperFailure(t, "get", "pathdup1")
+		RunJumperFailure(t, "get", "pathdup2")
+	})
+
+	t.Run("delete by dot arg uses current directory path", func(t *testing.T) {
+		RunJumperSuccessIn(t, "/tmp", "mark", "dottest")
+		RunJumperSuccessIn(t, "/tmp", "delete", ".")
+		RunJumperFailure(t, "get", "dottest")
+	})
+
+	t.Run("delete by path fails when no bookmarks found", func(t *testing.T) {
+		out := RunJumperFailure(t, "delete", "/no/such/path")
+		if !strings.Contains(out, "/no/such/path") {
+			t.Errorf("expected error to mention path, got: %s", out)
+		}
 	})
 
 	t.Run("delete multiple bookmarks", func(t *testing.T) {
