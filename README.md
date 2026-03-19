@@ -7,6 +7,8 @@ Jumper lets you bookmark directories and jump to them by name from anywhere in y
 
 **Inspired by [zshmarks](https://github.com/jocelynmallon/zshmarks)**, Jumper is a standalone Go binary with shell integration, case-insensitive subdirectory tab-completion, and Table/JSON/YAML output.
 
+![demo GIF](./static/demo.gif)
+
 ## Table of Contents
 
 - [Installation](#installation)
