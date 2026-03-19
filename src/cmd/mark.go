@@ -44,6 +44,10 @@ If the name already exists, its path is overwritten.`,
 			dir = args[1]
 		}
 
+		if dir, err = filepath.Abs(dir); err != nil {
+			services.Fatal("error: cannot resolve path: %v", err)
+		}
+
 		if strings.HasPrefix(name, ".") || strings.HasPrefix(name, "~") || strings.HasPrefix(name, "/") {
 			services.Fatal("error: bookmark name cannot start with '.', '~', or '/'")
 		}

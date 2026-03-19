@@ -4,6 +4,10 @@ go = "1"
 # Used for demo GIF
 vhs = "latest"
 
+[tasks.test]
+description = "Run tests"
+run = "go test ./..."
+
 [tasks.lint]
 description = "Lint code"
 run = '''
