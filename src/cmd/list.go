@@ -57,7 +57,11 @@ var listCmd = &cobra.Command{
 					bookmarkPath = "~" + after
 				}
 
-				t.AppendRow(table.Row{color.New(color.FgBlue).Sprint(bookmark.Title), bookmarkPath})
+				if _, err := os.Stat(bookmark.Path); os.IsNotExist(err) {
+					t.AppendRow(table.Row{color.New(color.FgBlue).Sprint(bookmark.Title), bookmarkPath + " " + color.New(color.FgYellow).Sprint("[not found]")})
+				} else {
+					t.AppendRow(table.Row{color.New(color.FgBlue).Sprint(bookmark.Title), bookmarkPath})
+				}
 			}
 			t.SetStyle(table.StyleLight)
 			t.Render()
