@@ -58,15 +58,16 @@ func RunJumperFailure(t *testing.T, args ...string) string {
 }
 
 // SetupTest redirects the data directory to a temp folder for test isolation.
-func SetupTest(t *testing.T) func() {
+// Cleanup is registered automatically via t.Cleanup.
+func SetupTest(t *testing.T) {
 	t.Helper()
 	tmpDir, err := os.MkdirTemp("", "jumper-test-*")
 	if err != nil {
 		t.Fatal(err)
 	}
 	_ = os.Setenv("XDG_DATA_HOME", tmpDir)
-	return func() {
+	t.Cleanup(func() {
 		_ = os.Unsetenv("XDG_DATA_HOME")
 		_ = os.RemoveAll(tmpDir)
-	}
+	})
 }

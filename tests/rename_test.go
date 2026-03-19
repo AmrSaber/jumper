@@ -6,10 +6,8 @@ import (
 )
 
 func TestRenameCommand(t *testing.T) {
-	cleanup := SetupTest(t)
-	defer cleanup()
-
 	t.Run("rename existing bookmark", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "oldname")
 		RunJumperSuccess(t, "rename", "oldname", "newname")
 		RunJumperFailure(t, "get", "oldname")
@@ -17,6 +15,7 @@ func TestRenameCommand(t *testing.T) {
 	})
 
 	t.Run("rename non-existent bookmark fails", func(t *testing.T) {
+		SetupTest(t)
 		out := RunJumperFailure(t, "rename", "ghost", "newname")
 		if !strings.Contains(out, "ghost") {
 			t.Errorf("expected error to mention old name, got: %s", out)
@@ -24,6 +23,7 @@ func TestRenameCommand(t *testing.T) {
 	})
 
 	t.Run("mv alias works", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "mv-test")
 		RunJumperSuccess(t, "mv", "mv-test", "mv-renamed")
 		RunJumperFailure(t, "get", "mv-test")
@@ -31,12 +31,14 @@ func TestRenameCommand(t *testing.T) {
 	})
 
 	t.Run("rename is case-insensitive on old name", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "CaseMark")
 		RunJumperSuccess(t, "rename", "casemark", "renamed-case")
 		RunJumperSuccess(t, "get", "renamed-case")
 	})
 
 	t.Run("rename to path-like name fails", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "path-rename-test")
 		RunJumperFailure(t, "rename", "path-rename-test", ".hidden")
 		RunJumperFailure(t, "rename", "path-rename-test", "~/something")
@@ -44,6 +46,7 @@ func TestRenameCommand(t *testing.T) {
 	})
 
 	t.Run("renamed bookmark appears in list with new name", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "before")
 		RunJumperSuccess(t, "rename", "before", "after")
 		out := RunJumperSuccess(t, "list", "--output", "json")

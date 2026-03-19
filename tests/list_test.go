@@ -6,10 +6,8 @@ import (
 )
 
 func TestListCommand(t *testing.T) {
-	cleanup := SetupTest(t)
-	defer cleanup()
-
 	t.Run("empty list shows helpful message", func(t *testing.T) {
+		SetupTest(t)
 		out := RunJumperSuccess(t, "list")
 		if !strings.Contains(out, "No bookmarks") {
 			t.Errorf("expected empty state message, got: %s", out)
@@ -17,6 +15,7 @@ func TestListCommand(t *testing.T) {
 	})
 
 	t.Run("list shows all bookmarks", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "alpha")
 		RunJumperSuccess(t, "mark", "beta")
 		RunJumperSuccess(t, "mark", "gamma")
@@ -30,6 +29,7 @@ func TestListCommand(t *testing.T) {
 	})
 
 	t.Run("list is sorted by title", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "zebra")
 		RunJumperSuccess(t, "mark", "apple")
 		RunJumperSuccess(t, "mark", "mango")
@@ -42,6 +42,7 @@ func TestListCommand(t *testing.T) {
 	})
 
 	t.Run("list with JSON output", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "jsonmark")
 		out := RunJumperSuccess(t, "list", "--output", "json")
 
@@ -56,6 +57,7 @@ func TestListCommand(t *testing.T) {
 	})
 
 	t.Run("list with YAML output", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "yamlmark")
 		out := RunJumperSuccess(t, "list", "--output", "yaml")
 
@@ -67,13 +69,36 @@ func TestListCommand(t *testing.T) {
 	})
 
 	t.Run("unsupported output format fails", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "dummy")
 		out := RunJumperFailure(t, "list", "--output", "xml")
 		if !strings.Contains(out, "xml") {
 			t.Errorf("expected error to mention format, got: %s", out)
 		}
 	})
 
+	t.Run("list marks missing paths with not found hint", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "ghost", "/no/such/path")
+		out := RunJumperSuccess(t, "list")
+		if !strings.Contains(out, "[not found]") {
+			t.Errorf("expected '[not found]' hint for missing path, got: %s", out)
+		}
+	})
+
+	t.Run("list does not mark existing paths with not found hint", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccessIn(t, "/tmp", "mark", "existingpath")
+		out := RunJumperSuccess(t, "list")
+		for _, line := range strings.Split(out, "\n") {
+			if strings.Contains(line, "existingpath") && strings.Contains(line, "[not found]") {
+				t.Errorf("expected no '[not found]' hint for existing path row, got: %s", line)
+			}
+		}
+	})
+
 	t.Run("ls alias works", func(t *testing.T) {
+		SetupTest(t)
 		RunJumperSuccess(t, "mark", "aliascheck")
 		out := RunJumperSuccess(t, "ls")
 		if !strings.Contains(out, "aliascheck") {
