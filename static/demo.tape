@@ -67,6 +67,13 @@ Sleep 2s
 
 Enter
 
+# --- Mark: non-existing directory ---
+Type "jumper mark ghost ~/demo-dirs/does-not-exist"
+Enter
+Sleep 2s
+
+Enter
+
 # --- List all bookmarks ---
 Type "jumper list"
 Enter
@@ -98,7 +105,7 @@ Type "# Auto-completion"
 Enter
 Sleep 500ms
 
-Type "jump my"
+Type "jump app"
 Sleep 500ms
 Tab
 Sleep 500ms
@@ -112,11 +119,11 @@ Sleep 2s
 Ctrl+L
 
 # --- Subdirectory traversal ---
-Type "# Auto-completion for nested directories too"
+Type "# Nested directories auto-completion"
 Enter
 Sleep 500ms
 
-Type "jump my"
+Type "jump app"
 Sleep 500ms
 Tab
 Sleep 500ms
@@ -156,7 +163,7 @@ Sleep 5s
 Ctrl+L
 
 # --- Delete multiple by name ---
-Type "jumper delete deploy dotfiles"
+Type "jumper delete deploy ghost"
 Enter
 Sleep 2s
 
