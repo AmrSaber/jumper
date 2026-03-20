@@ -36,7 +36,9 @@ var completeCmd = &cobra.Command{
 			}
 			lower := strings.ToLower(namePrefix)
 			for _, entry := range entries {
-				if !entry.IsDir() {
+				entryPath := filepath.Join(bookmark.Path, dir, entry.Name())
+				info, err := os.Stat(entryPath)
+				if err != nil || !info.IsDir() {
 					continue
 				}
 				if strings.HasPrefix(strings.ToLower(entry.Name()), lower) {
