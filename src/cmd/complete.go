@@ -41,7 +41,7 @@ var completeCmd = &cobra.Command{
 				if err != nil || !info.IsDir() {
 					continue
 				}
-				if strings.HasPrefix(strings.ToLower(entry.Name()), lower) {
+				if strings.Contains(strings.ToLower(entry.Name()), lower) {
 					fmt.Println(bookmark.Title + "/" + filepath.Join(dir, entry.Name()) + "/")
 				}
 			}
@@ -55,12 +55,12 @@ var completeCmd = &cobra.Command{
 	},
 }
 
-// bookmarkCompletions returns bookmark titles that start with the given prefix (case-insensitive).
+// bookmarkCompletions returns bookmark titles that contain the given string (case-insensitive).
 func bookmarkCompletions(prefix string) []cobra.Completion {
 	lower := strings.ToLower(prefix)
 	var matches []cobra.Completion
 	for _, b := range services.List() {
-		if strings.HasPrefix(strings.ToLower(b.Title), lower) {
+		if strings.Contains(strings.ToLower(b.Title), lower) {
 			matches = append(matches, b.Title)
 		}
 	}

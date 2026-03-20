@@ -60,7 +60,26 @@ func TestCompleteCommand(t *testing.T) {
 		}
 	})
 
-	t.Run("prefix filters bookmark titles case-insensitively", func(t *testing.T) {
+	t.Run("query filters bookmark titles by substring case-insensitively", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "projects")
+		RunJumperSuccess(t, "mark", "personal")
+		RunJumperSuccess(t, "mark", "work")
+
+		// "ro" is a substring of "projects" but not "personal" or "work"
+		out := RunJumperSuccess(t, "complete", "ro")
+		if !strings.Contains(out, "projects/") {
+			t.Errorf("expected 'projects/' in completions, got:\n%s", out)
+		}
+		if strings.Contains(out, "personal/") {
+			t.Errorf("expected 'personal/' to be filtered out, got:\n%s", out)
+		}
+		if strings.Contains(out, "work/") {
+			t.Errorf("expected 'work/' to be filtered out, got:\n%s", out)
+		}
+	})
+
+	t.Run("query matches bookmark titles by prefix", func(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccess(t, "mark", "projects")
 		RunJumperSuccess(t, "mark", "personal")
@@ -105,21 +124,43 @@ func TestCompleteCommand(t *testing.T) {
 		}
 	})
 
-	t.Run("subpath prefix filters subdirectories", func(t *testing.T) {
+	t.Run("subpath filters subdirectories by prefix", func(t *testing.T) {
 		SetupTest(t)
 		base := tempDir(t)
-		mustMkdir(t, filepath.Join(base, "src"))
-		mustMkdir(t, filepath.Join(base, "scripts"))
+		mustMkdir(t, filepath.Join(base, "frontend"))
+		mustMkdir(t, filepath.Join(base, "backend"))
+		mustMkdir(t, filepath.Join(base, "shared"))
+
+		RunJumperSuccess(t, "mark", "proj", base)
+		out := RunJumperSuccess(t, "complete", "proj/front")
+
+		if !strings.Contains(out, "proj/frontend/") {
+			t.Errorf("expected 'proj/frontend/' in completions, got:\n%s", out)
+		}
+		if strings.Contains(out, "proj/backend/") {
+			t.Errorf("expected 'proj/backend/' to be filtered out, got:\n%s", out)
+		}
+		if strings.Contains(out, "proj/shared/") {
+			t.Errorf("expected 'proj/shared/' to be filtered out, got:\n%s", out)
+		}
+	})
+
+	t.Run("subpath filters subdirectories by substring", func(t *testing.T) {
+		SetupTest(t)
+		base := tempDir(t)
+		mustMkdir(t, filepath.Join(base, "internal"))
+		mustMkdir(t, filepath.Join(base, "external"))
 		mustMkdir(t, filepath.Join(base, "docs"))
 
 		RunJumperSuccess(t, "mark", "proj", base)
-		out := RunJumperSuccess(t, "complete", "proj/s")
+		// "ern" is a substring of both "internal" and "external" but not "docs"
+		out := RunJumperSuccess(t, "complete", "proj/ern")
 
-		if !strings.Contains(out, "proj/src/") {
-			t.Errorf("expected 'proj/src/' in completions, got:\n%s", out)
+		if !strings.Contains(out, "proj/internal/") {
+			t.Errorf("expected 'proj/internal/' in completions, got:\n%s", out)
 		}
-		if !strings.Contains(out, "proj/scripts/") {
-			t.Errorf("expected 'proj/scripts/' in completions, got:\n%s", out)
+		if !strings.Contains(out, "proj/external/") {
+			t.Errorf("expected 'proj/external/' in completions, got:\n%s", out)
 		}
 		if strings.Contains(out, "proj/docs/") {
 			t.Errorf("expected 'proj/docs/' to be filtered out, got:\n%s", out)

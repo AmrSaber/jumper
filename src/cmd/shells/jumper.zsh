@@ -9,7 +9,8 @@ function jump() {
 function _jumper_complete() {
   local candidates
   candidates=($(jumper complete "${words[$CURRENT]}"))
-  compadd -U -S '' -a candidates
+  compadd -U -S '' -- "${candidates[@]}"
+  compstate[insert]='menu'
 }
 
 compdef _jumper_complete jump
