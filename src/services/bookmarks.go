@@ -30,6 +30,7 @@ func Get(title string) (Bookmark, bool) {
 			return b, true
 		}
 	}
+
 	return Bookmark{}, false
 }
 
