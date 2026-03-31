@@ -12,28 +12,29 @@ import (
 )
 
 var getCmd = &cobra.Command{
-	Use:   "get <bookmark>[/path]",
-	Short: "Print the resolved path for a bookmark",
-	Long: `Get resolves a bookmark and prints the full path.
+	Use:     "resolve <bookmark>[/path]",
+	Short:   "Print the resolved path for a bookmark",
+	Aliases: []string{"get"},
+	Long: `Resolve resolves a bookmark and prints the full path.
 
 The argument is a bookmark name, optionally followed by a relative path to a
 subdirectory or file within the bookmarked directory.
 
 Examples:
   # Print the bookmarked path
-  jumper get myproject
+  jumper resolve myproject
 
   # Print the path for a subdirectory of a bookmark
-  jumper get myproject/src/internal
+  jumper resolve myproject/src/internal
 
   # Print the path for a file inside a bookmark
-  jumper get myproject/README.md
+  jumper resolve myproject/README.md
 
   # Use the resolved path in a command
-  ls $(jumper get myproject/docs)
+  ls $(jumper resolve myproject/docs)
 
   # Open a file from a bookmark in an editor
-  $EDITOR $(jumper get myproject/src/index.ts)`,
+  $EDITOR $(jumper resolve myproject/src/index.ts)`,
 	Args: cobra.ExactArgs(1),
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
 		if len(args) != 0 {
