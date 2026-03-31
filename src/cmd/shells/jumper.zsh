@@ -15,7 +15,7 @@ function jump() {
   fi
 
   local dir
-  dir=$(jumper resolve "$@") || return 1
+  dir=$(jumper resolve "$1") || return 1
   cd "$dir" || {
     echo "error: failed to cd into '$dir'" >&2
     return 1
