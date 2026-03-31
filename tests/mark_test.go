@@ -25,7 +25,7 @@ func TestMarkCommand(t *testing.T) {
 	t.Run("mark records the working directory", func(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccessIn(t, "/tmp", "mark", "tempdir")
-		if path := RunJumperSuccess(t, "get", "tempdir"); path != "/tmp" {
+		if path := RunJumperSuccess(t, "resolve", "tempdir"); path != "/tmp" {
 			t.Errorf("expected '/tmp', got: %s", path)
 		}
 	})
@@ -34,7 +34,7 @@ func TestMarkCommand(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccess(t, "mark", "overwrite")
 		RunJumperSuccessIn(t, "/tmp", "mark", "overwrite")
-		if path := RunJumperSuccess(t, "get", "overwrite"); path != "/tmp" {
+		if path := RunJumperSuccess(t, "resolve", "overwrite"); path != "/tmp" {
 			t.Errorf("expected updated path '/tmp', got: %s", path)
 		}
 	})
@@ -42,7 +42,7 @@ func TestMarkCommand(t *testing.T) {
 	t.Run("mark with explicit name and directory", func(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccess(t, "mark", "explicit-dir", "/tmp")
-		if path := RunJumperSuccess(t, "get", "explicit-dir"); path != "/tmp" {
+		if path := RunJumperSuccess(t, "resolve", "explicit-dir"); path != "/tmp" {
 			t.Errorf("expected '/tmp', got: %s", path)
 		}
 	})
@@ -58,7 +58,7 @@ func TestMarkCommand(t *testing.T) {
 	t.Run("mark with relative path resolves to absolute", func(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccessIn(t, "/tmp", "mark", "relpath", "./")
-		if path := RunJumperSuccess(t, "get", "relpath"); path != "/tmp" {
+		if path := RunJumperSuccess(t, "resolve", "relpath"); path != "/tmp" {
 			t.Errorf("expected '/tmp', got: %s", path)
 		}
 	})

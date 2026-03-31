@@ -10,7 +10,7 @@ func TestDeleteCommand(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccess(t, "mark", "todelete")
 		RunJumperSuccess(t, "delete", "todelete")
-		RunJumperFailure(t, "get", "todelete")
+		RunJumperFailure(t, "resolve", "todelete")
 	})
 
 	t.Run("delete non-existent bookmark fails", func(t *testing.T) {
@@ -25,28 +25,28 @@ func TestDeleteCommand(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccess(t, "mark", "rm-test")
 		RunJumperSuccess(t, "rm", "rm-test")
-		RunJumperFailure(t, "get", "rm-test")
+		RunJumperFailure(t, "resolve", "rm-test")
 	})
 
 	t.Run("unmark alias works", func(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccess(t, "mark", "unmark-test")
 		RunJumperSuccess(t, "unmark", "unmark-test")
-		RunJumperFailure(t, "get", "unmark-test")
+		RunJumperFailure(t, "resolve", "unmark-test")
 	})
 
 	t.Run("delete with no args uses current directory path", func(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccessIn(t, "/tmp", "mark", "tmp")
 		RunJumperSuccessIn(t, "/tmp", "delete")
-		RunJumperFailure(t, "get", "tmp")
+		RunJumperFailure(t, "resolve", "tmp")
 	})
 
 	t.Run("delete by explicit path", func(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccessIn(t, "/tmp", "mark", "bypath")
 		RunJumperSuccess(t, "delete", "/tmp")
-		RunJumperFailure(t, "get", "bypath")
+		RunJumperFailure(t, "resolve", "bypath")
 	})
 
 	t.Run("delete by path removes all bookmarks for that path", func(t *testing.T) {
@@ -54,15 +54,15 @@ func TestDeleteCommand(t *testing.T) {
 		RunJumperSuccessIn(t, "/tmp", "mark", "pathdup1")
 		RunJumperSuccessIn(t, "/tmp", "mark", "pathdup2")
 		RunJumperSuccess(t, "delete", "/tmp")
-		RunJumperFailure(t, "get", "pathdup1")
-		RunJumperFailure(t, "get", "pathdup2")
+		RunJumperFailure(t, "resolve", "pathdup1")
+		RunJumperFailure(t, "resolve", "pathdup2")
 	})
 
 	t.Run("delete by dot arg uses current directory path", func(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccessIn(t, "/tmp", "mark", "dottest")
 		RunJumperSuccessIn(t, "/tmp", "delete", ".")
-		RunJumperFailure(t, "get", "dottest")
+		RunJumperFailure(t, "resolve", "dottest")
 	})
 
 	t.Run("delete by path fails when no bookmarks found", func(t *testing.T) {
@@ -79,9 +79,9 @@ func TestDeleteCommand(t *testing.T) {
 		RunJumperSuccess(t, "mark", "multi2")
 		RunJumperSuccess(t, "mark", "multi3")
 		RunJumperSuccess(t, "delete", "multi1", "multi2", "multi3")
-		RunJumperFailure(t, "get", "multi1")
-		RunJumperFailure(t, "get", "multi2")
-		RunJumperFailure(t, "get", "multi3")
+		RunJumperFailure(t, "resolve", "multi1")
+		RunJumperFailure(t, "resolve", "multi2")
+		RunJumperFailure(t, "resolve", "multi3")
 	})
 
 	t.Run("delete multiple fails if any non-existent", func(t *testing.T) {

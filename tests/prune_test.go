@@ -32,7 +32,7 @@ func TestPruneCommand(t *testing.T) {
 			t.Errorf("expected deleted bookmark name in output, got: %s", out)
 		}
 
-		RunJumperFailure(t, "get", "stale")
+		RunJumperFailure(t, "resolve", "stale")
 	})
 
 	t.Run("keeps valid bookmarks intact", func(t *testing.T) {
@@ -46,7 +46,7 @@ func TestPruneCommand(t *testing.T) {
 
 		RunJumperSuccess(t, "mark", "valid", dir)
 		RunJumperSuccess(t, "prune")
-		RunJumperSuccess(t, "get", "valid")
+		RunJumperSuccess(t, "resolve", "valid")
 	})
 
 	t.Run("removes only stale, keeps valid", func(t *testing.T) {
@@ -69,8 +69,8 @@ func TestPruneCommand(t *testing.T) {
 
 		RunJumperSuccess(t, "prune")
 
-		RunJumperSuccess(t, "get", "valid")
-		RunJumperFailure(t, "get", "stale")
+		RunJumperSuccess(t, "resolve", "valid")
+		RunJumperFailure(t, "resolve", "stale")
 	})
 
 	t.Run("clean alias works", func(t *testing.T) {
