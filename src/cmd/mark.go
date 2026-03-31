@@ -17,7 +17,9 @@ var markCmd = &cobra.Command{
 	Long: `Bookmark a directory under the given name.
 If no name is provided, the directory's base name is used.
 If no directory is provided, the current directory is used.
-If the name already exists, its path is overwritten.`,
+If the name already exists, its path is overwritten.
+
+Bookmark names cannot start with '.', '~', or '/', and '-' is reserved.`,
 	Example: `  # Bookmark current directory using its base name
   jumper mark
 

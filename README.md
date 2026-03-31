@@ -79,12 +79,16 @@ jump -
 
 # List all bookmarks (also: jump with no arguments)
 jumper list
-# ┌──────────┬───────────────────┐
-# │ TITLE    │ PATH              │
-# ├──────────┼───────────────────┤
-# │ dotfiles │ ~/.dotfiles       │
-# │ my-app   │ ~/Projects/my-app │
-# └──────────┴───────────────────┘
+# ┌──────────┬───────────────────────────┐
+# │ TITLE    │ PATH                      │
+# ├──────────┼───────────────────────────┤
+# │ dotfiles │ ~/.dotfiles [not found]   │
+# │ my-app   │ ~/Projects/my-app         │
+# └──────────┴───────────────────────────┘
+# Paths that no longer exist are flagged with [not found] in table output.
+# Use --output json or --output yaml for machine-readable output.
+jumper list --output json
+jumper list --output yaml
 
 # Rename a bookmark
 jumper rename my-app app
@@ -120,6 +124,8 @@ jumper resolve my-app/src/components
 | `jump -`                  | cd back to the previous directory           |
 | `jump`                    | display all bookmarks (calls `jumper list`) |
 | `jump a b`                | error with usage message                    |
+
+> `-` is a reserved name and cannot be used as a bookmark name.
 
 ## Tab Completion
 
