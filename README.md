@@ -14,6 +14,7 @@ Jumper lets you bookmark directories and jump to them by name from anywhere in y
 - [Installation](#installation)
 - [Shell Setup](#shell-setup)
 - [Quick Start](#quick-start)
+- [`jump` Behaviour](#jump-behaviour)
 - [Tab Completion](#tab-completion)
 - [Data Storage](#data-storage)
 
@@ -73,7 +74,10 @@ jump my-app
 # Jump into a subdirectory directly
 jump my-app/src/components
 
-# List all bookmarks
+# Jump back to the previous directory (like cd -)
+jump -
+
+# List all bookmarks (also: jump with no arguments)
 jumper list
 # ┌──────────┬───────────────────┐
 # │ TITLE    │ PATH              │
@@ -97,8 +101,25 @@ jumper delete ~/Projects/my-app
 # Delete all bookmarks pointing to the current directory
 jumper delete           # or: jumper delete .
 
+# Remove all bookmarks whose paths no longer exist
+jumper prune            # or: jumper clean
+
+# Print the resolved path for a bookmark (useful in scripts)
+jumper resolve my-app
+jumper resolve my-app/src/components
+
 # Use `jumper help` to get the full help
 ```
+
+## `jump` Behaviour
+
+| Invocation                | Result                                      |
+| ------------------------- | ------------------------------------------- |
+| `jump <bookmark>`         | cd to the bookmarked directory              |
+| `jump <bookmark>/sub/dir` | cd into a subdirectory of the bookmark      |
+| `jump -`                  | cd back to the previous directory           |
+| `jump`                    | display all bookmarks (calls `jumper list`) |
+| `jump a b`                | error with usage message                    |
 
 ## Tab Completion
 
@@ -127,7 +148,7 @@ The file is a plain JSON array — easy to inspect, back up, or sync with your d
 ```json
 [
   { "title": "dotfiles", "path": "/home/amr/.dotfiles" },
-  { "title": "proj",     "path": "/home/amr/Projects/my-app" }
+  { "title": "app", "path": "/home/amr/Projects/my-app" }
 ]
 ```
 
