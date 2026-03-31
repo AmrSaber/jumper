@@ -1,7 +1,10 @@
 // Package services for io operations
 package services
 
-import "strings"
+import (
+	"os"
+	"strings"
+)
 
 type Bookmark struct {
 	Title string `json:"title"`
@@ -69,12 +72,35 @@ func Delete(title string) bool {
 	return false
 }
 
+// Prune removes all bookmarks whose paths no longer exist. Returns the deleted bookmarks.
+func Prune() []Bookmark {
+	bookmarks := loadBookmarks()
+
+	remaining := make([]Bookmark, 0, len(bookmarks))
+	var deleted []Bookmark
+
+	for _, bookmark := range bookmarks {
+		if _, err := os.Stat(bookmark.Path); os.IsNotExist(err) {
+			deleted = append(deleted, bookmark)
+		} else {
+			remaining = append(remaining, bookmark)
+		}
+	}
+
+	if len(deleted) > 0 {
+		saveBookmarks(remaining)
+	}
+
+	return deleted
+}
+
 // DeleteByPath removes all bookmarks pointing to the given path. Returns the deleted bookmarks.
 func DeleteByPath(path string) []Bookmark {
 	bookmarks := loadBookmarks()
 
-	remaining := bookmarks[:0]
+	remaining := make([]Bookmark, 0, len(bookmarks))
 	var deleted []Bookmark
+
 	for _, bookmark := range bookmarks {
 		if bookmark.Path == path {
 			deleted = append(deleted, bookmark)
