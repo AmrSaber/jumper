@@ -17,6 +17,12 @@ import (
 
 var listFlags = struct{ output string }{}
 
+type bookmarkOutput struct {
+	Title   string `json:"title" yaml:"title"`
+	Path    string `json:"path" yaml:"path"`
+	Missing bool   `json:"missing,omitempty" yaml:"missing,omitempty"`
+}
+
 var listCmd = &cobra.Command{
 	Use:     "list",
 	Short:   "List all bookmarks",
@@ -35,12 +41,21 @@ var listCmd = &cobra.Command{
 		})
 
 		switch listFlags.output {
-		case "json":
-			output, _ := json.MarshalIndent(bookmarks, "", "  ")
-			fmt.Println(string(output))
-		case "yaml":
-			output, _ := yaml.Marshal(bookmarks)
-			fmt.Print(string(output))
+		case "json", "yaml":
+			out := make([]bookmarkOutput, len(bookmarks))
+			for i, b := range bookmarks {
+				_, err := os.Stat(b.Path)
+				out[i] = bookmarkOutput{Title: b.Title, Path: b.Path, Missing: os.IsNotExist(err)}
+			}
+
+			if listFlags.output == "json" {
+				output, _ := json.MarshalIndent(out, "", "  ")
+				fmt.Println(string(output))
+			} else {
+				output, _ := yaml.Marshal(out)
+				fmt.Print(string(output))
+			}
+
 		case "table":
 			t := table.NewWriter()
 			t.SetOutputMirror(os.Stdout)
@@ -65,6 +80,7 @@ var listCmd = &cobra.Command{
 			}
 			t.SetStyle(table.StyleLight)
 			t.Render()
+
 		default:
 			services.Fatal("error: unsupported format %q", listFlags.output)
 		}

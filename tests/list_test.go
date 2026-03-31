@@ -97,6 +97,42 @@ func TestListCommand(t *testing.T) {
 		}
 	})
 
+	t.Run("JSON output includes missing:true for stale bookmarks", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "ghost", "/no/such/path")
+		out := RunJumperSuccess(t, "list", "--output", "json")
+		if !strings.Contains(out, `"missing": true`) {
+			t.Errorf("expected missing:true in JSON output, got: %s", out)
+		}
+	})
+
+	t.Run("JSON output omits missing field for valid bookmarks", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccessIn(t, "/tmp", "mark", "valid")
+		out := RunJumperSuccess(t, "list", "--output", "json")
+		if strings.Contains(out, `"missing"`) {
+			t.Errorf("expected missing field to be omitted for valid bookmark, got: %s", out)
+		}
+	})
+
+	t.Run("YAML output includes missing:true for stale bookmarks", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "ghost", "/no/such/path")
+		out := RunJumperSuccess(t, "list", "--output", "yaml")
+		if !strings.Contains(out, "missing: true") {
+			t.Errorf("expected missing:true in YAML output, got: %s", out)
+		}
+	})
+
+	t.Run("YAML output omits missing field for valid bookmarks", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccessIn(t, "/tmp", "mark", "valid")
+		out := RunJumperSuccess(t, "list", "--output", "yaml")
+		if strings.Contains(out, "missing:") {
+			t.Errorf("expected missing field to be omitted for valid bookmark, got: %s", out)
+		}
+	})
+
 	t.Run("ls alias works", func(t *testing.T) {
 		SetupTest(t)
 		RunJumperSuccess(t, "mark", "aliascheck")
