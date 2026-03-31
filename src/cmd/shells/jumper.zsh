@@ -1,6 +1,13 @@
 eval "$(jumper completion zsh)"
 
 function jump() {
+  if [[ $# -eq 0 ]]; then
+    jumper list
+    return
+  elif [[ $# -gt 1 ]]; then
+    echo "usage: jump <bookmark>" >&2
+    return 1
+  fi
   local dir
   dir=$(jumper get "$@") || return 1
   cd "$dir" || { echo "error: failed to cd into '$dir'" >&2; return 1; }
