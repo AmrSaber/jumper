@@ -13,7 +13,10 @@ var renameCmd = &cobra.Command{
 	Use:     "rename <old-name> <new-name>",
 	Short:   "Rename a bookmark",
 	Aliases: []string{"mv"},
-	Args:    cobra.ExactArgs(2),
+	Long: `Rename an existing bookmark. The old name is matched case-insensitively.
+
+New bookmark names cannot start with '.', '~', or '/', and '-' is reserved.`,
+	Args: cobra.ExactArgs(2),
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
 		if len(args) == 0 {
 			return bookmarkCompletions(toComplete), cobra.ShellCompDirectiveNoFileComp

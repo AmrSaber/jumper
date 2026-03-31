@@ -22,7 +22,7 @@ var pruneCmd = &cobra.Command{
 		}
 
 		for _, bookmark := range deleted {
-			fmt.Printf("Deleted bookmark %q (%s)\n", bookmark.Title, bookmark.Path)
+			fmt.Printf("Deleted bookmark %q\n", bookmark.Title)
 		}
 	},
 }
