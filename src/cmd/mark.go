@@ -52,6 +52,10 @@ If the name already exists, its path is overwritten.`,
 			services.Fatal("error: bookmark name cannot start with '.', '~', or '/'")
 		}
 
+		if name == "-" {
+			services.Fatal("error: '-' is a reserved name")
+		}
+
 		if _, err := os.Stat(dir); os.IsNotExist(err) {
 			services.Warn("warning: directory %q does not exist", dir)
 		}

@@ -27,6 +27,10 @@ var renameCmd = &cobra.Command{
 			services.Fatal("error: bookmark name cannot start with '.', '~', or '/'")
 		}
 
+		if newName == "-" {
+			services.Fatal("error: '-' is a reserved name")
+		}
+
 		if !services.Rename(oldName, newName) {
 			services.Fatal("error: no bookmark named %q", oldName)
 		}

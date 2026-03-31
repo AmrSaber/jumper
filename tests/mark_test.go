@@ -69,4 +69,12 @@ func TestMarkCommand(t *testing.T) {
 		RunJumperFailure(t, "mark", "~/something")
 		RunJumperFailure(t, "mark", "/absolute")
 	})
+
+	t.Run("mark with reserved name '-' fails", func(t *testing.T) {
+		SetupTest(t)
+		out := RunJumperFailure(t, "mark", "-")
+		if !strings.Contains(out, "reserved") {
+			t.Errorf("expected error to mention reserved name, got: %s", out)
+		}
+	})
 }
