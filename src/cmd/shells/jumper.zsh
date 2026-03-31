@@ -8,9 +8,18 @@ function jump() {
     echo "usage: jump <bookmark>" >&2
     return 1
   fi
+
+  if [[ "$1" == "-" ]]; then
+    cd - || return 1
+    return
+  fi
+
   local dir
   dir=$(jumper get "$@") || return 1
-  cd "$dir" || { echo "error: failed to cd into '$dir'" >&2; return 1; }
+  cd "$dir" || {
+    echo "error: failed to cd into '$dir'" >&2
+    return 1
+  }
 }
 
 function _jumper_complete() {
