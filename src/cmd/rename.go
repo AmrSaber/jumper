@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"jumper/src/services"
+	"github.com/AmrSaber/jumper/src/services"
 
 	"github.com/spf13/cobra"
 )

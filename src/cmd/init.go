@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"jumper/src/services"
+	"github.com/AmrSaber/jumper/src/services"
 
 	"github.com/spf13/cobra"
 )

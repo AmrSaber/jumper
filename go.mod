@@ -1,4 +1,4 @@
-module jumper
+module github.com/AmrSaber/jumper
 
 go 1.26.1
 

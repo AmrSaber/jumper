@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"jumper/src/services"
+	"github.com/AmrSaber/jumper/src/services"
 
 	"github.com/fatih/color"
 	"github.com/jedib0t/go-pretty/table"

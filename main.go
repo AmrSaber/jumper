@@ -1,6 +1,6 @@
 package main
 
-import "jumper/src/cmd"
+import "github.com/AmrSaber/jumper/src/cmd"
 
 var version string
 
