@@ -27,9 +27,7 @@ var agentSetupCmd = &cobra.Command{
 		switch agentName {
 		case "opencode":
 			skillPath, pluginPath := common.OpencodePaths()
-			_ = os.Remove(skillPath)
-			writeAsset(skillPath, assets.OpencodeSkill)
-
+			_ = os.RemoveAll(filepath.Dir(skillPath))
 			_ = os.Remove(pluginPath)
 			writeAsset(pluginPath, assets.OpencodePlugin)
 		default:

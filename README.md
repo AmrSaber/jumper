@@ -163,7 +163,7 @@ The file is a plain JSON array — easy to inspect, back up, or sync with your d
 
 ## Agent Integration
 
-Jumper ships an integration for coding agents so they always know your current bookmarks (name → path) and how to manage them. Installing it writes two files into the agent's config: a skill describing the bookmark-management commands, and a plugin that feeds the live bookmark list into each turn.
+Jumper ships an integration for coding agents so they always know your current bookmarks (name → path) and how to manage them. Installing it writes one plugin that registers the bookmark-management skill and feeds the live bookmark list into each turn.
 
 ```bash
 # Install the integration
@@ -173,7 +173,7 @@ jumper agent setup opencode
 jumper agent cleanup opencode
 ```
 
-For OpenCode this writes `~/.config/opencode/skills/jumper/SKILL.md` and `~/.config/opencode/plugins/jumper-inject.ts`. Re-run `setup` to update them after upgrading jumper.
+For OpenCode this writes `~/.config/opencode/plugins/jumper-inject.ts`. Re-run `setup` to update it after upgrading jumper.
 
 ---
 

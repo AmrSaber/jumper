@@ -13,7 +13,7 @@ import (
 var agentCleanupCmd = &cobra.Command{
 	Use:       "cleanup <agent-name>",
 	Short:     "Remove jumper's integration from a supported agent",
-	Long:      `Remove the jumper skill and plugin previously written by 'jumper agent setup'. Only the files jumper installed are removed; the rest of the agent's config is left untouched.`,
+	Long:      `Remove the jumper plugin and any legacy skill written by 'jumper agent setup'. Only the files jumper installed are removed; the rest of the agent's config is left untouched.`,
 	Args:      cobra.ExactArgs(1),
 	ValidArgs: common.SupportedAgents,
 	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]cobra.Completion, cobra.ShellCompDirective) {
