@@ -1,6 +1,9 @@
 package tests
 
 import (
+	"encoding/json"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -77,4 +80,62 @@ func TestMarkCommand(t *testing.T) {
 			t.Errorf("expected error to mention reserved name, got: %s", out)
 		}
 	})
+
+	t.Run("mark with comment stores it", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "commented", "/tmp", "--comment", "my note")
+		if got := storedComment(t, "commented"); got != "my note" {
+			t.Errorf("expected comment 'my note', got: %q", got)
+		}
+	})
+
+	t.Run("mark with short comment flag", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "short", "/tmp", "-c", "short note")
+		if got := storedComment(t, "short"); got != "short note" {
+			t.Errorf("expected comment 'short note', got: %q", got)
+		}
+	})
+
+	t.Run("mark without comment stores none", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "plain", "/tmp")
+		if got := storedComment(t, "plain"); got != "" {
+			t.Errorf("expected empty comment, got: %q", got)
+		}
+	})
+
+	t.Run("re-mark replaces comment", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "redo", "/tmp", "-c", "first")
+		RunJumperSuccess(t, "mark", "redo", "/tmp", "-c", "second")
+		if got := storedComment(t, "redo"); got != "second" {
+			t.Errorf("expected comment 'second', got: %q", got)
+		}
+		RunJumperSuccess(t, "mark", "redo", "/tmp")
+		if got := storedComment(t, "redo"); got != "" {
+			t.Errorf("expected comment cleared, got: %q", got)
+		}
+	})
+}
+
+// storedComment reads the comment of a bookmark straight from the data file,
+// because no command prints comments yet.
+func storedComment(t *testing.T, title string) string {
+	t.Helper()
+	data, err := os.ReadFile(filepath.Join(os.Getenv("XDG_DATA_HOME"), "jumper", "bookmarks.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var bookmarks []struct{ Title, Comment string }
+	if err := json.Unmarshal(data, &bookmarks); err != nil {
+		t.Fatal(err)
+	}
+	for _, b := range bookmarks {
+		if b.Title == title {
+			return b.Comment
+		}
+	}
+	t.Fatalf("bookmark %q not found", title)
+	return ""
 }

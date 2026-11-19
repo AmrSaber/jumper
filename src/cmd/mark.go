@@ -11,13 +11,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var markFlags = struct{ comment string }{}
+
 var markCmd = &cobra.Command{
 	Use:   "mark [name] [directory]",
 	Short: "Bookmark a directory",
 	Long: `Bookmark a directory under the given name.
 If no name is provided, the directory's base name is used.
 If no directory is provided, the current directory is used.
-If the name already exists, its path is overwritten.
+If the name already exists, its path and comment are overwritten.
 
 Bookmark names cannot start with '.', '~', or '/', and '-' is reserved.`,
 	Example: `  # Bookmark current directory using its base name
@@ -27,7 +29,10 @@ Bookmark names cannot start with '.', '~', or '/', and '-' is reserved.`,
   jumper mark proj
 
   # Bookmark a specific directory as "proj"
-  jumper mark proj ~/Projects/my-app`,
+  jumper mark proj ~/Projects/my-app
+
+  # Bookmark with a comment
+  jumper mark proj --comment "Main project"`,
 	Args: cobra.MaximumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		dir, err := os.Getwd()
@@ -62,7 +67,7 @@ Bookmark names cannot start with '.', '~', or '/', and '-' is reserved.`,
 			services.Warn("warning: directory %q does not exist", dir)
 		}
 
-		services.Upsert(name, dir)
+		services.Upsert(name, dir, markFlags.comment)
 
 		fmt.Printf("Bookmarked %q -> %s\n", name, dir)
 	},
@@ -70,4 +75,6 @@ Bookmark names cannot start with '.', '~', or '/', and '-' is reserved.`,
 
 func init() {
 	rootCmd.AddCommand(markCmd)
+
+	markCmd.Flags().StringVarP(&markFlags.comment, "comment", "c", "", "Optional comment for the bookmark")
 }

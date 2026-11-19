@@ -54,14 +54,14 @@ Enter
 Type "cd ~/demo-dirs/.dotfiles"
 Enter
 
-Type "jumper mark dotfiles"
+Type `jumper mark dotfiles --comment "Shell and editor config"`
 Enter
 Sleep 2s
 
 Enter
 
 # --- Mark: alias for a nested path ---
-Type "jumper mark deploy ~/demo-dirs/scripts/deploy"
+Type `jumper mark deploy ~/demo-dirs/scripts/deploy -c "Deploy scripts"`
 Enter
 Sleep 2s
 
@@ -162,8 +162,44 @@ Sleep 5s
 
 Ctrl+L
 
+# --- Comments: set one, remove another ---
+Type "# Comments"
+Enter
+Sleep 500ms
+
+Type `jumper comment app "Main project"`
+Enter
+Sleep 1s
+
+Type "jumper comment dotfiles --no-comment"
+Enter
+Sleep 1s
+
+Type "jumper list"
+Enter
+Sleep 4s
+
+Ctrl+L
+
+# --- Prune: remove bookmarks whose directory no longer exists ---
+Type "# Prune stale bookmarks"
+Enter
+Sleep 500ms
+
+Type "jumper prune"
+Enter
+Sleep 2s
+
+Enter
+
+Type "jumper list"
+Enter
+Sleep 4s
+
+Ctrl+L
+
 # --- Delete multiple by name ---
-Type "jumper delete deploy ghost"
+Type "jumper delete deploy dotfiles"
 Enter
 Sleep 2s
 

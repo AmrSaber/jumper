@@ -69,6 +69,13 @@ jumper mark my-app
 # Bookmark a specific directory without cd-ing into it
 jumper mark my-app ~/Projects/my-app
 
+# Bookmark with a comment (shown in the list; re-marking without -c clears it)
+jumper mark my-app ~/Projects/my-app --comment "Main project"
+
+# Set, replace, or remove the comment of an existing bookmark
+jumper comment my-app "Main project"
+jumper comment my-app --no-comment
+
 # Jump to a bookmark from anywhere
 jump my-app
 
@@ -80,13 +87,14 @@ jump -
 
 # List all bookmarks (also: jump with no arguments)
 jumper list
-# ┌──────────┬───────────────────────────┐
-# │ TITLE    │ PATH                      │
-# ├──────────┼───────────────────────────┤
-# │ dotfiles │ ~/.dotfiles [not found]   │
-# │ my-app   │ ~/Projects/my-app         │
-# └──────────┴───────────────────────────┘
+# ┌──────────┬─────────────────────────┬──────────────┐
+# │ TITLE    │ PATH                    │ COMMENT      │
+# ├──────────┼─────────────────────────┼──────────────┤
+# │ dotfiles │ ~/.dotfiles [not found] │ -            │
+# │ my-app   │ ~/Projects/my-app       │ Main project │
+# └──────────┴─────────────────────────┴──────────────┘
 # Paths that no longer exist are flagged with [not found] in table output.
+# The COMMENT column only appears when at least one bookmark has a comment.
 # Use --output json or --output yaml for machine-readable output.
 jumper list --output json
 jumper list --output yaml

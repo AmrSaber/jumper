@@ -141,4 +141,34 @@ func TestListCommand(t *testing.T) {
 			t.Errorf("expected ls alias to work, got: %s", out)
 		}
 	})
+
+	t.Run("table shows Comment column only when a bookmark has a comment", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "plain", "/tmp")
+		if out := RunJumperSuccess(t, "list"); strings.Contains(out, "COMMENT") {
+			t.Errorf("expected no Comment column, got:\n%s", out)
+		}
+
+		RunJumperSuccess(t, "mark", "noted", "/tmp", "-c", "my note")
+		out := RunJumperSuccess(t, "list")
+		if !strings.Contains(out, "COMMENT") || !strings.Contains(out, "my note") {
+			t.Errorf("expected COMMENT column with 'my note', got:\n%s", out)
+		}
+	})
+
+	t.Run("JSON and YAML output include comment only when set", func(t *testing.T) {
+		SetupTest(t)
+		RunJumperSuccess(t, "mark", "plain", "/tmp")
+		RunJumperSuccess(t, "mark", "noted", "/tmp", "-c", "my note")
+
+		out := RunJumperSuccess(t, "list", "-o", "json")
+		if !strings.Contains(out, `"comment": "my note"`) || strings.Count(out, `"comment"`) != 1 {
+			t.Errorf("expected exactly one comment in JSON output, got: %s", out)
+		}
+
+		out = RunJumperSuccess(t, "list", "-o", "yaml")
+		if !strings.Contains(out, "comment: my note") || strings.Count(out, "comment:") != 1 {
+			t.Errorf("expected exactly one comment in YAML output, got: %s", out)
+		}
+	})
 }

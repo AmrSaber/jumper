@@ -8,7 +8,7 @@ const BLOCK_OPEN = '<jumper-bookmarks>';
 const BLOCK_CLOSE = '</jumper-bookmarks>';
 const SKILL_CONTENT = `---
 name: jumper
-description: Use when managing jumper bookmarks — marking, deleting, renaming, or pruning directory bookmarks.
+description: Use when managing jumper bookmarks — marking, commenting, deleting, renaming, or pruning directory bookmarks.
 ---
 
 ## What this skill is for
@@ -25,7 +25,9 @@ Never invoke these proactively. Use only when the user explicitly asks to manage
 
 | Command                      | Aliases               | What it does                                                    |
 | ---------------------------- | --------------------- | --------------------------------------------------------------- |
-| \`jumper mark [name] [dir]\`   |                       | Bookmark a directory; defaults to current dir and its base name |
+| \`jumper mark [name] [dir] [-c comment]\` |                 | Bookmark a directory; defaults to current dir and its base name; optional comment |
+| \`jumper comment <name> <comment>\` |                | Set the comment of an existing bookmark                         |
+| \`jumper comment <name> --no-comment\` |             | Remove the comment of an existing bookmark                      |
 | \`jumper delete [name\|path]\` | \`del\`, \`rm\`, \`unmark\` | Delete by name or path; no arg = current directory              |
 | \`jumper rename <old> <new>\`  | \`mv\`                  | Rename a bookmark (case-insensitive match on old name)          |
 | \`jumper prune\`               | \`clean\`               | Remove bookmarks whose paths no longer exist                    |
@@ -33,13 +35,14 @@ Never invoke these proactively. Use only when the user explicitly asks to manage
 ## Gotchas
 
 - Bookmark names cannot start with \`.\`, \`~\`, or \`/\`; \`-\` is reserved.
-- \`mark\` silently overwrites an existing bookmark of the same name.
+- \`mark\` silently overwrites an existing bookmark of the same name, including its comment (cleared unless \`-c\` is given).
+- Comments are shown in the injected block as \`[comment]\` after the path.
 - \`delete\` with a path argument (starts with \`/\`, \`~\`, or \`.\`) removes **all** bookmarks pointing to that path — use name form to be precise.
 - The injected \`<jumper-bookmarks>\` block (and \`jumper list\`) might show paths that have since been deleted or moved; \`jumper prune\` cleans these up.
 `;
 const SYSTEM_PRIMER = [
   "jumper is the user's directory-bookmark CLI: short names mapped to directories.",
-  `The current bookmarks are injected each turn in a \`${BLOCK_OPEN}\` block (name: path).`,
+  `The current bookmarks are injected each turn in a \`${BLOCK_OPEN}\` block (name: path [comment]).`,
   'When the user refers to a project or directory by name, use that path directly instead of asking.',
 ].join('\n');
 
@@ -56,7 +59,15 @@ async function renderBookmarks(): Promise<string> {
         (bookmark: { title?: unknown; path?: unknown }) =>
           typeof bookmark.title === 'string' && typeof bookmark.path === 'string',
       )
-      .map((bookmark: { title: string; path: string }) => `- ${bookmark.title}: ${bookmark.path}`);
+      .map((bookmark: { title: string; path: string; comment?: string }) => {
+        let commentSection = '';
+        if (bookmark.comment != null && bookmark.comment != '') {
+          commentSection = ` [${bookmark.comment}]`;
+        }
+
+        return `- ${bookmark.title}: ${bookmark.path}${commentSection}`;
+      });
+
     return lines.length ? [BLOCK_OPEN, ...lines, BLOCK_CLOSE].join('\n') : '';
   } catch {
     return '';
@@ -70,7 +81,8 @@ export default {
       editor.add({
         id: 'jumper',
         name: 'jumper',
-        description: 'Use when managing jumper bookmarks — marking, deleting, renaming, or pruning directory bookmarks.',
+        description:
+          'Use when managing jumper bookmarks — marking, commenting, deleting, renaming, or pruning directory bookmarks.',
         path: new URL(import.meta.url).pathname,
         content: SKILL_CONTENT,
       });

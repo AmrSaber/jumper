@@ -34,8 +34,8 @@ New bookmark names cannot start with '.', '~', or '/', and '-' is reserved.`,
 			services.Fatal("error: '-' is a reserved name")
 		}
 
-		if !services.Rename(oldName, newName) {
-			services.Fatal("error: no bookmark named %q", oldName)
+		if err := services.Rename(oldName, newName); err != nil {
+			services.Fatal("error: %v", err)
 		}
 
 		fmt.Printf("Renamed bookmark %q to %q\n", oldName, newName)

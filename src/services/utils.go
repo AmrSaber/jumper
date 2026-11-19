@@ -20,8 +20,8 @@ func Warn(format string, args ...any) {
 	_, _ = color.New(color.FgYellow).Fprintf(os.Stderr, format+"\n", args...)
 }
 
-// bookmarksPath returns the path to the bookmarks file.
-func bookmarksPath() string {
+// BookmarksPath returns the path to the bookmarks file.
+func BookmarksPath() string {
 	scope := gap.NewScope(gap.User, "jumper")
 	path, err := scope.DataPath("bookmarks.json")
 	if err != nil {
@@ -31,7 +31,7 @@ func bookmarksPath() string {
 }
 
 func loadBookmarks() []Bookmark {
-	path := bookmarksPath()
+	path := BookmarksPath()
 	data, err := os.ReadFile(path)
 	if os.IsNotExist(err) {
 		return []Bookmark{}
@@ -48,7 +48,7 @@ func loadBookmarks() []Bookmark {
 }
 
 func saveBookmarks(bookmarks []Bookmark) {
-	path := bookmarksPath()
+	path := BookmarksPath()
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		Fatal("error: cannot create data directory: %v", err)
 	}

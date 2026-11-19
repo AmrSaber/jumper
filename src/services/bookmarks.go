@@ -2,28 +2,48 @@
 package services
 
 import (
+	"fmt"
 	"os"
 	"strings"
 )
 
 type Bookmark struct {
-	Title string `json:"title"`
-	Path  string `json:"path"`
+	Title   string `json:"title"`
+	Path    string `json:"path"`
+	Comment string `json:"comment,omitempty"`
 }
 
-// Upsert adds or updates a bookmark with the given title and path.
-func Upsert(title, path string) {
+// Upsert adds or updates a bookmark with the given title, path and comment.
+func Upsert(title, path, comment string) {
+	comment = singleLine(comment)
 	bookmarks := loadBookmarks()
 
 	for i, b := range bookmarks {
 		if strings.EqualFold(b.Title, title) {
 			bookmarks[i].Path = path
+			bookmarks[i].Comment = comment
 			saveBookmarks(bookmarks)
 			return
 		}
 	}
 
-	saveBookmarks(append(bookmarks, Bookmark{Title: title, Path: path}))
+	saveBookmarks(append(bookmarks, Bookmark{Title: title, Path: path, Comment: comment}))
+}
+
+// UpdateComment updates the comment of an existing bookmark.
+func UpdateComment(title, comment string) error {
+	comment = singleLine(comment)
+	bookmarks := loadBookmarks()
+
+	for i, b := range bookmarks {
+		if strings.EqualFold(b.Title, title) {
+			bookmarks[i].Comment = comment
+			saveBookmarks(bookmarks)
+			return nil
+		}
+	}
+
+	return fmt.Errorf("no bookmark named %q", title)
 }
 
 // Get returns the bookmark with the given title (case-insensitive), and whether it exists.
@@ -43,19 +63,19 @@ func List() []Bookmark {
 }
 
 // Rename renames a bookmark from oldTitle to newTitle (case-insensitive match on oldTitle).
-// Returns false if oldTitle does not exist.
-func Rename(oldTitle, newTitle string) bool {
+// Returns an error if oldTitle does not exist.
+func Rename(oldTitle, newTitle string) error {
 	bookmarks := loadBookmarks()
 
 	for i, b := range bookmarks {
 		if strings.EqualFold(b.Title, oldTitle) {
 			bookmarks[i].Title = newTitle
 			saveBookmarks(bookmarks)
-			return true
+			return nil
 		}
 	}
 
-	return false
+	return fmt.Errorf("no bookmark named %q", oldTitle)
 }
 
 // Delete removes a bookmark by title (case-insensitive). Returns true if it existed.
@@ -114,4 +134,9 @@ func DeleteByPath(path string) []Bookmark {
 	}
 
 	return deleted
+}
+
+// singleLine replaces line breaks with spaces so a comment fits on one line in every output.
+func singleLine(s string) string {
+	return strings.TrimSpace(strings.NewReplacer("\r\n", " ", "\n", " ", "\r", " ").Replace(s))
 }
